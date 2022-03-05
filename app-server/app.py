@@ -5,8 +5,7 @@ import subprocess
 import requests
 from botocore.exceptions import NoCredentialsError
 
-ACCESS_KEY = 'AKIAWR447HNMAXDEWL7O'
-SECRET_KEY = '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'
+
 sqs = boto3.client("sqs")
 request_queue_url = 'https://sqs.us-east-1.amazonaws.com/547230687929/Request_Queue'
 response_queue_url = 'https://sqs.us-east-1.amazonaws.com/547230687929/Response_Queue'
@@ -58,8 +57,7 @@ def ping_webserver():
 #     return
 
 def upload_to_aws(local_file, bucket, s3_file):
-    s3 = boto3.client('s3', aws_access_key_id=ACCESS_KEY,
-                      aws_secret_access_key=SECRET_KEY)
+    s3 = boto3.client('s3')
 
     try:
         s3.upload_file(local_file, bucket, s3_file)
@@ -73,10 +71,8 @@ def upload_to_aws(local_file, bucket, s3_file):
         return False
 
 def upload_result(bucket_name,file_name,txt_data):
-    session = boto3.Session(
-        aws_access_key_id='AKIAWR447HNMAXDEWL7O',
-        aws_secret_access_key='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'
-    )
+    session=boto3.Session(profile_name='default')
+
     s3 = session.resource('s3')
 
     object = s3.Object(bucket_name, file_name)
